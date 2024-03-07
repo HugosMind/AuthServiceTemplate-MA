@@ -6,6 +6,7 @@ export default {
   preset: 'ts-jest',
   testEnvironment: 'node',
   roots: ['<rootDir>/src', '<rootDir>/tests'],
+  setupFilesAfterEnv: ['<rootDir>/tests/setup.ts'],
   testMatch: ["<rootDir>/tests/**/*.test.ts"],
   moduleFileExtensions: ['ts', 'tsx', 'js'],
 };
