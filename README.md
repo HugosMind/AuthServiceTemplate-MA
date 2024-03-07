@@ -47,6 +47,7 @@ POST /auth/login           Authenticates a user and returns a JWToken
 GET /api/users/profile     Returns the authenticated user info
 PUT /api/users/profile     Updates the authenticated user info
 ```
+The profile endpoints are secured and require an `Authorization` header with format `Bearer {TOKEN_FROM_LOGIN}`.
 
 # Tests
 
