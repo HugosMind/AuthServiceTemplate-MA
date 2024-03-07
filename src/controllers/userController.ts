@@ -10,7 +10,7 @@ export const createUser = async (req: Request, res: Response,  next: NextFunctio
     // Gets the validation result from the express-validator middleware
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      next(new ValidationError(errors.array()));
+      return next(new ValidationError(errors.array()));
     }
 
     const { email, password, first_name, last_name } = req.body;
@@ -19,7 +19,7 @@ export const createUser = async (req: Request, res: Response,  next: NextFunctio
 
     res.status(201).json({ message: 'User registered successfully', user: userCreated });
   } catch (error) {
-    next(error);
+    return next(error);
   }
 };
 
@@ -35,7 +35,7 @@ export const getUserProfile = async (req: Request, res: Response, next: NextFunc
       }
     } else {
       // If req.user is not defined, the user is not authenticated
-      next(new UnauthorizedError());
+      return next(new UnauthorizedError());
     }
   };
 
@@ -43,7 +43,7 @@ export const updateUserProfile = async (req: Request, res: Response, next: NextF
     try {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-          next(new ValidationError(errors.array()));
+          return next(new ValidationError(errors.array()));
         }
 
         const { first_name, last_name, email, password } = req.body;
@@ -53,6 +53,6 @@ export const updateUserProfile = async (req: Request, res: Response, next: NextF
 
         res.status(200).json({ message: 'User profile updated successfully', user: updatedUser });
     } catch (error) {
-        next(error)
+        return next(error)
     }
   };

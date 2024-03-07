@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 import passport from 'passport';
 import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
+import { Strategy as LocalStrategy } from 'passport-local';
 import { UserModel } from '../models/userModel';
 dotenv.config();
 
@@ -9,6 +10,21 @@ const jwtSecret = process.env.JWT_SECRET || "Testing?";
 if (!jwtSecret) {
     throw new Error('JWT_SECRET is not defined in .env file');
 }
+
+// Configuration for Local strategy
+passport.use(new LocalStrategy(
+  {
+    usernameField: 'email',
+    passwordField: 'password'
+  },
+  async (email, password, done) => {
+    const user = await UserModel.findOne({ email });
+    if (!user || !user.verifyPassword(password)) {
+      return done(null, false, { message: 'Invalid username or password' });
+    }
+    return done(null, user);
+  }
+));
 
 // Configuration for JWT strategy
 passport.use(new JwtStrategy(

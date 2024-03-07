@@ -1,8 +1,8 @@
 export class ValidationError extends Error {
-    constructor(public validationErrors: Array<any>) {
-      super('Validation failed');
-    }
+  constructor(public validationErrors: Array<any>) {
+    super('Validation failed');
   }
+}
 
 export class UnauthorizedError extends Error {
   constructor() {

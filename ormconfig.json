@@ -8,7 +8,6 @@
     "synchronize": true,
     "logging": false,
     "entities": [
-      "dist/models/*.js"
+      "dist/src/models/*.js"
     ]
   }
-  

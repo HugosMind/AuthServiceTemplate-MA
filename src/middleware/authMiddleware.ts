@@ -21,6 +21,6 @@ export const isJwtAuthenticated = (req: Request, res: Response, next: NextFuncti
     // We will use this later in the controllers
     req.user = user;
 
-    return next();
+    next();
   })(req, res, next);
 };

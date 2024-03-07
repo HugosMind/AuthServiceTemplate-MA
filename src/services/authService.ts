@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 dotenv.config();
 
-const jwtSecret = process.env.JWT_SECRET;
+const jwtSecret = process.env.JWT_SECRET || "Testing?";
 
 if (!jwtSecret) {
   throw new Error('JWT_SECRET is not defined in .env file');

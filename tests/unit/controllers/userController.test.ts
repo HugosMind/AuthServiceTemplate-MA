@@ -8,7 +8,7 @@ jest.mock('../../../src/services/userService');
 
 describe('Create User', () => {
   it('should create a user and return a success response', async () => {
-    // Simular la solicitud y la respuesta
+    // Simulate the request and response
     const userPayload = {
         email: 'test@example.com',
         password: 'password',
@@ -26,7 +26,7 @@ describe('Create User', () => {
 
     const next = jest.fn();
 
-    // Simular la respuesta de userService.createUser
+    // Simulate the user returned by userService.createUser
     const { password, ...userWithoutPassword } = userPayload;
     (userService.createUser as jest.Mock).mockResolvedValue({
       id: 1,
@@ -35,7 +35,7 @@ describe('Create User', () => {
 
     await createUser(req, res, next);
 
-    // Verificar que userService.createUser fue llamado con los argumentos correctos
+    // Verify that userService.createUser was called with the correct arguments
     expect(userService.createUser).toHaveBeenCalledWith(
       req.body.email,
       req.body.password,
@@ -43,7 +43,7 @@ describe('Create User', () => {
       req.body.last_name
     );
 
-    // Verificar que se envió una respuesta de éxito
+    // Verify that the response was sent with the correct data
     expect(res.status).toHaveBeenCalledWith(201);
     expect(res.json).toHaveBeenCalledWith({
       message: 'User registered successfully',
@@ -55,7 +55,7 @@ describe('Create User', () => {
       },
     });
 
-    // Verificar que next no fue llamado (no hubo errores)
+    // Verify that next was not called (no errors occurred)
     expect(next).not.toHaveBeenCalled();
   });
 
@@ -77,13 +77,13 @@ describe('Create User', () => {
 
     const next = jest.fn();
 
-    // Simular un error de base de datos
+    // Simulate that userService.createUser throws a database error
     const dbError = new Error('Database error');
     (userService.createUser as jest.Mock).mockRejectedValue(dbError);
 
     await createUser(req, res, next);
 
-    // Verificar que userService.createUser fue llamado con los argumentos correctos
+    // Verify that userService.createUser was called with the correct arguments
     expect(userService.createUser).toHaveBeenCalledWith(
       req.body.email,
       req.body.password,
@@ -91,10 +91,10 @@ describe('Create User', () => {
       req.body.last_name
     );
 
-    // Verificar que next fue llamado con el error de base de datos
+    // Verify that next was called with the database error
     expect(next).toHaveBeenCalledWith(dbError);
 
-    // Verificar que no se envió ninguna respuesta
+    // Verify that the response was not sent
     expect(res.status).not.toHaveBeenCalled();
     expect(res.json).not.toHaveBeenCalled();
   });
@@ -102,7 +102,7 @@ describe('Create User', () => {
 
 describe('Get User', () => {
     it('should return user profile if user is authenticated', async () => {
-        // Simular la solicitud y la respuesta
+        // Simulate the request and response
         const req = {
           user: {
             id: 1,
@@ -117,7 +117,7 @@ describe('Get User', () => {
 
         const next = jest.fn();
 
-        // Simular el usuario devuelto por getUserService
+        // Simulate the user returned by userService.getUser
         const mockUser = {
           id: 1,
           email: 'test@example.com',
@@ -129,17 +129,17 @@ describe('Get User', () => {
 
         await getUserProfile(req, res, next);
 
-        // Verificar que se envió la información del usuario
+        // Verify that userService.getUser was called with the correct arguments
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.json).toHaveBeenCalledWith({ message: 'User profile', user: mockUser });
 
-        // Verificar que no se envió ninguna respuesta de error
+        // Verify that next was not called
         expect(res.status).not.toHaveBeenCalledWith(404);
         expect(next).not.toHaveBeenCalled();
       });
 
       it('should call next with UnauthorizedError if user is not authenticated', async () => {
-        // Simular la solicitud y la respuesta
+        // Simulate the request and response
         const req = {} as unknown as Request;
 
         const res = {
@@ -151,16 +151,16 @@ describe('Get User', () => {
 
         await getUserProfile(req, res, next);
 
-        // Verificar que next fue llamado con un UnauthorizedError
+        // Verify that next was called with UnauthorizedError
         expect(next).toHaveBeenCalledWith(new UnauthorizedError());
 
-        // Verificar que no se envió ninguna respuesta
+        // Verify that no response was sent
         expect(res.status).not.toHaveBeenCalled();
         expect(res.json).not.toHaveBeenCalled();
       });
 
       it('should return 404 if user is not found', async () => {
-        // Simular la solicitud y la respuesta
+        // Simulate the request and response
         const req = {
           user: {
             id: 1,
@@ -175,23 +175,23 @@ describe('Get User', () => {
 
         const next = jest.fn();
 
-        // Simular que getUserService devuelve null
+        // Simulate that userService.getUser returns null
         (userService.getUser as jest.Mock).mockResolvedValue(null);
 
         await getUserProfile(req, res, next);
 
-        // Verificar que se envió una respuesta de error
+        // Verify that the response was sent with a 404 status
         expect(res.status).toHaveBeenCalledWith(404);
         expect(res.json).toHaveBeenCalledWith({ message: 'User not found' });
 
-        // Verificar que next no fue llamado
+        // Verify that next was not called
         expect(next).not.toHaveBeenCalled();
       });
 });
 
 describe('updateUserProfile controller', () => {
     it('should update user profile if validation passes', async () => {
-      // Simular la solicitud y la respuesta
+      // Simulate the request and response
       const req = {
         user: {
           id: 1,
@@ -212,7 +212,7 @@ describe('updateUserProfile controller', () => {
 
       const next = jest.fn();
 
-      // Simular el usuario devuelto por updateUserService
+      // Simulate the user returned by userService.updateUser
       const mockUser = {
         id: 1,
         email: 'updated@example.com',
@@ -224,16 +224,16 @@ describe('updateUserProfile controller', () => {
 
       await updateUserProfile(req, res, next);
 
-      // Verificar que se envió la información del usuario actualizado
+      // Verify that userService.updateUser was called with the correct arguments
       expect(res.status).toHaveBeenCalledWith(200);
       expect(res.json).toHaveBeenCalledWith({ message: 'User profile updated successfully', user: mockUser });
 
-      // Verificar que no se envió ninguna respuesta de error
+      // Verify that next was not called (no errors)
       expect(next).not.toHaveBeenCalled();
     });
 
     it('should call next with the error if updateUser throws an error', async () => {
-        // Simular la solicitud y la respuesta
+        // Simulate the request and response
         const req = {
           user: {
             id: 1,
@@ -254,16 +254,16 @@ describe('updateUserProfile controller', () => {
 
         const next = jest.fn();
 
-        // Simular que updateUserService lanza un error
+        // Simulate that userService.updateUser throws an error
         const mockError = new Error('Database error');
         (userService.updateUser as jest.Mock).mockRejectedValue(mockError);
 
         await updateUserProfile(req, res, next);
 
-        // Verificar que next fue llamado con el error
+        // Verify that userService.updateUser was called with the correct arguments
         expect(next).toHaveBeenCalledWith(mockError);
 
-        // Verificar que no se envió ninguna respuesta
+        // Verify that the response was not sent
         expect(res.status).not.toHaveBeenCalled();
         expect(res.json).not.toHaveBeenCalled();
       });
